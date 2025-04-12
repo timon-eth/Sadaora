@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_API_BASE_URL;
+const apiUrl = 'http://172.86.113.102:5003/api';
 
 const apiService = {
   // Auth endpoints
