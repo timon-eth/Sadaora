@@ -271,5 +271,5 @@ Discover is a social platform that enables users to:
 
 ### Live URLs
 - Frontend: https://sadaora.vercel.app
-- Backend: https://172.86.113.102/api
+- Backend: https://sadaora.crypto-elite.xyz/api
 - Source: https://github.com/timon-eth/Sadaora
