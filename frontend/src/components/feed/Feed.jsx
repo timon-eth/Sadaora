@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, Avatar, Button, Input, Space, Empty, Spin, message } from 'antd';
 import { UserOutlined, HeartOutlined, HeartFilled, MessageOutlined, ShareAltOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import apiService from '../../services/apiService';
 
 const { Search } = Input;
 
@@ -36,9 +36,7 @@ export default function Feed() {
   const fetchCurrentUser = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:3000/api/profile/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await apiService.getProfile(token);
       setCurrentUser(response.data);
     } catch (error) {
       console.error('Error fetching current user:', error);
@@ -49,20 +47,12 @@ export default function Feed() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const endpoint = interestsFilter 
-        ? `http://localhost:3000/api/feed/filter?page=${pageNum}&interests=${interestsFilter}`
-        : `http://localhost:3000/api/feed?page=${pageNum}`;
-
-      const response = await axios.get(endpoint, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await apiService.getFeed(token, pageNum, interestsFilter);
 
       const profilesWithFollow = await Promise.all(
         response.data.profiles.map(async (profile) => {
           try {
-            const followResponse = await axios.get(`http://localhost:3000/api/profile/${profile.id}/follow`, {
-              headers: { Authorization: `Bearer ${token}` }
-            });
+            const followResponse = await apiService.getFollowStatus(token, profile.id);
             return { ...profile, isFollowing: followResponse.data.isFollowing };
           } catch (error) {
             return { ...profile, isFollowing: false };
@@ -84,9 +74,7 @@ export default function Feed() {
   const handleFollow = async (profileId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:3000/api/profile/${profileId}/follow`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiService.followUser(token, profileId);
       
       setProfiles(profiles.map(profile => 
         profile.id === profileId 
@@ -102,9 +90,7 @@ export default function Feed() {
   const handleUnfollow = async (profileId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:3000/api/profile/${profileId}/follow`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiService.unfollowUser(token, profileId);
       
       setProfiles(profiles.map(profile => 
         profile.id === profileId 
