@@ -1,5 +1,5 @@
 import axios from 'axios';
-const apiURL = import.meta.env.VITE_API_BASE_URL || 'https://172.86.113.102/api';
+const apiURL = import.meta.env.VITE_API_BASE_URL;
 
 const apiService = {
   // Auth endpoints

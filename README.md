@@ -268,3 +268,8 @@ Discover is a social platform that enables users to:
 ### Feed Endpoints
 - GET /api/feed - Get paginated feed of profiles
 - GET /api/feed/interests - Filter feed by interests
+
+### Live URLs
+- Frontend: https://sadaora.vercel.app
+- Backend: https://172.86.113.102/api
+- Source: https://github.com/timon-eth/Sadaora
