@@ -1,16 +1,17 @@
 import axios from 'axios';
+const apiURL = import.meta.env.VITE_API_BASE_URL || 'http://172.86.113.102:5003/api';
 
 const apiService = {
   // Auth endpoints
   login: async (email, password) => {
-    return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+    return await axios.post(`${apiURL}/auth/login`, {
       email,
       password,
     });
   },
 
   register: async (email, password, name) => {
-    return await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, {
+    return await axios.post(`${apiURL}/auth/signup`, {
       email,
       password,
       name,
@@ -19,14 +20,14 @@ const apiService = {
 
   // Profile endpoints
   getProfile: async (token) => {
-    return await axios.get(`${import.meta.env.VITE_API_BASE_URL}/profile/me`, {
+    return await axios.get(`${apiURL}/profile/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   },
 
   updateProfile: async (token, data) => {
     return await axios.put(
-      `${import.meta.env.VITE_API_BASE_URL}/profile/me`,
+      `${apiURL}/profile/me`,
       data,
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -35,7 +36,7 @@ const apiService = {
   },
 
   deleteProfile: async (token) => {
-    return await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/profile/me`, {
+    return await axios.delete(`${apiURL}/profile/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   },
@@ -43,8 +44,8 @@ const apiService = {
   // Feed endpoints
   getFeed: async (token, pageNum, interestsFilter = '') => {
     const endpoint = interestsFilter 
-      ? `${import.meta.env.VITE_API_BASE_URL}/feed/filter?page=${pageNum}&interests=${interestsFilter}`
-      : `${import.meta.env.VITE_API_BASE_URL}/feed?page=${pageNum}`;
+      ? `${apiURL}/feed/filter?page=${pageNum}&interests=${interestsFilter}`
+      : `${apiURL}/feed?page=${pageNum}`;
 
     return await axios.get(endpoint, {
       headers: { Authorization: `Bearer ${token}` }
@@ -53,14 +54,14 @@ const apiService = {
 
   // Follow endpoints
   getFollowStatus: async (token, profileId) => {
-    return await axios.get(`${import.meta.env.VITE_API_BASE_URL}/profile/${profileId}/follow`, {
+    return await axios.get(`${apiURL}/profile/${profileId}/follow`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   },
 
   followUser: async (token, profileId) => {
     return await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/profile/${profileId}/follow`,
+      `${apiURL}/profile/${profileId}/follow`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -69,7 +70,7 @@ const apiService = {
   },
 
   unfollowUser: async (token, profileId) => {
-    return await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/profile/${profileId}/follow`, {
+    return await axios.delete(`${apiURL}/profile/${profileId}/follow`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   },
@@ -77,7 +78,7 @@ const apiService = {
   // Post endpoints
   createPost: async (token, content, imageUrl) => {
     return await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/posts`,
+      `${apiURL}/posts`,
       { content, imageUrl },
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -86,7 +87,7 @@ const apiService = {
   },
 
   getPosts: async (token, pageNum) => {
-    return await axios.get(`${import.meta.env.VITE_API_BASE_URL}/posts?page=${pageNum}`, {
+    return await axios.get(`${apiURL}/posts?page=${pageNum}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   },
@@ -94,7 +95,7 @@ const apiService = {
   // Like endpoints
   likePost: async (token, postId) => {
     return await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/posts/${postId}/like`,
+      `${apiURL}/posts/${postId}/like`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` }
@@ -103,7 +104,7 @@ const apiService = {
   },
 
   unlikePost: async (token, postId) => {
-    return await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}/like`, {
+    return await axios.delete(`${apiURL}/posts/${postId}/like`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
