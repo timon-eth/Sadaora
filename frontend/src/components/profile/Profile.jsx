@@ -24,13 +24,13 @@ export default function Profile() {
     try {
       const token = localStorage.getItem('token');
       const response = await apiService.getProfile(token);
-      
+
       const profileData = {
         ...response.data,
         photoUrl: response.data.photoUrl || null,
         interests: response.data.interests?.join(', ') || ''
       };
-      
+
       setProfile(profileData);
       form.setFieldsValue(profileData);
     } catch (error) {
@@ -107,18 +107,18 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <Card className="max-w-2xl mx-auto">
+        <Button
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          className="absolute top-4 right-4"
+        >
+          logout
+        </Button>
         <div className="flex justify-between items-center mb-6">
           <div className="text-center flex-grow">
             <Title level={2}>Profile Settings</Title>
             <Text type="secondary">Update your profile information and preferences</Text>
           </div>
-          <Button 
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-            className="absolute top-4 right-4"
-          >
-            Logout
-          </Button>
         </div>
 
         <div className="flex justify-center mb-8">
@@ -140,8 +140,8 @@ export default function Profile() {
             name="photoUrl"
             label="Profile Photo URL"
           >
-            <Input 
-              placeholder="Enter photo URL" 
+            <Input
+              placeholder="Enter photo URL"
               disabled={!isEditing}
             />
           </Form.Item>
@@ -151,8 +151,8 @@ export default function Profile() {
             label="Name"
             rules={[{ required: true, message: 'Name is required' }]}
           >
-            <Input 
-              placeholder="Your name" 
+            <Input
+              placeholder="Your name"
               disabled={!isEditing}
             />
           </Form.Item>
@@ -161,8 +161,8 @@ export default function Profile() {
             name="headline"
             label="Headline"
           >
-            <Input 
-              placeholder="Your professional headline" 
+            <Input
+              placeholder="Your professional headline"
               disabled={!isEditing}
             />
           </Form.Item>
@@ -183,8 +183,8 @@ export default function Profile() {
             label="Interests"
             tooltip="Separate interests with commas"
           >
-            <Input 
-              placeholder="e.g. coding, reading, travel" 
+            <Input
+              placeholder="e.g. coding, reading, travel"
               disabled={!isEditing}
             />
           </Form.Item>

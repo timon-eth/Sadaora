@@ -33,9 +33,12 @@ export default function Register() {
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
           <Title level={2}>Create your account</Title>
-          <Text className="text-gray-600">
-            Or <Link to="/login" className="text-indigo-600 hover:text-indigo-500">sign in to your account</Link>
-          </Text>
+          <p className="mt-2 text-sm text-gray-600">
+            Or{' '}
+            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+              sign in to your account
+            </Link>
+          </p>
         </div>
 
         <Form
@@ -48,7 +51,7 @@ export default function Register() {
             name="name"
             rules={[{ required: true, message: 'Please input your name!' }]}
           >
-            <Input 
+            <Input
               prefix={<UserOutlined className="text-gray-400" />}
               placeholder="Full Name"
             />
@@ -61,7 +64,7 @@ export default function Register() {
               { type: 'email', message: 'Please enter a valid email!' }
             ]}
           >
-            <Input 
+            <Input
               prefix={<MailOutlined className="text-gray-400" />}
               placeholder="Email address"
             />
