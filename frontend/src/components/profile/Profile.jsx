@@ -3,7 +3,7 @@ import { Form, Input, Button, Card, Typography, message, Avatar, Space, Divider 
 import { UserOutlined, EditOutlined, SaveOutlined, DeleteOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiService from '../../services/apiService';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -23,16 +23,14 @@ export default function Profile() {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:3000/api/profile/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
+      const response = await apiService.getProfile(token);
+
       const profileData = {
         ...response.data,
         photoUrl: response.data.photoUrl || null,
         interests: response.data.interests?.join(', ') || ''
       };
-      
+
       setProfile(profileData);
       form.setFieldsValue(profileData);
     } catch (error) {
@@ -51,13 +49,7 @@ export default function Profile() {
         interests: values.interests ? values.interests.split(',').map(i => i.trim()).filter(i => i.length > 0) : []
       };
 
-      const response = await axios.put(
-        'http://localhost:3000/api/profile/me',
-        dataToSend,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const response = await apiService.updateProfile(token, dataToSend);
 
       const updatedProfile = {
         ...response.data,
@@ -89,11 +81,10 @@ export default function Profile() {
     if (window.confirm('Are you sure you want to delete your profile?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:3000/api/profile/me', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await apiService.deleteProfile(token);
         message.success('Profile deleted successfully');
-        // Handle logout and redirect
+        logout();
+        navigate('/login');
       } catch (error) {
         message.error('Error deleting profile');
       }
@@ -116,18 +107,18 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <Card className="max-w-2xl mx-auto">
+        <Button
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          className="absolute top-4 right-4"
+        >
+          logout
+        </Button>
         <div className="flex justify-between items-center mb-6">
           <div className="text-center flex-grow">
             <Title level={2}>Profile Settings</Title>
             <Text type="secondary">Update your profile information and preferences</Text>
           </div>
-          <Button 
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-            className="absolute top-4 right-4"
-          >
-            Logout
-          </Button>
         </div>
 
         <div className="flex justify-center mb-8">
@@ -149,8 +140,8 @@ export default function Profile() {
             name="photoUrl"
             label="Profile Photo URL"
           >
-            <Input 
-              placeholder="Enter photo URL" 
+            <Input
+              placeholder="Enter photo URL"
               disabled={!isEditing}
             />
           </Form.Item>
@@ -160,8 +151,8 @@ export default function Profile() {
             label="Name"
             rules={[{ required: true, message: 'Name is required' }]}
           >
-            <Input 
-              placeholder="Your name" 
+            <Input
+              placeholder="Your name"
               disabled={!isEditing}
             />
           </Form.Item>
@@ -170,8 +161,8 @@ export default function Profile() {
             name="headline"
             label="Headline"
           >
-            <Input 
-              placeholder="Your professional headline" 
+            <Input
+              placeholder="Your professional headline"
               disabled={!isEditing}
             />
           </Form.Item>
@@ -192,8 +183,8 @@ export default function Profile() {
             label="Interests"
             tooltip="Separate interests with commas"
           >
-            <Input 
-              placeholder="e.g. coding, reading, travel" 
+            <Input
+              placeholder="e.g. coding, reading, travel"
               disabled={!isEditing}
             />
           </Form.Item>

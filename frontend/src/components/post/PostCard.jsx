@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, notification } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import axios from 'axios';
+import apiService from '../../services/apiService';
 
 export default function PostCard({ post }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -12,7 +12,8 @@ export default function PostCard({ post }) {
 
   const checkIfLiked = async () => {
     try {
-      const response = await axios.get(`/api/profile/${post.author._id}/like`);
+      const token = localStorage.getItem('token');
+      const response = await apiService.getFollowStatus(token, post.author._id);
       setIsLiked(response.data.isLiked);
     } catch (error) {
       console.error('Error checking like status:', error);
@@ -21,15 +22,16 @@ export default function PostCard({ post }) {
 
   const handleLike = async () => {
     try {
+      const token = localStorage.getItem('token');
       if (!isLiked) {
-        await axios.post(`/api/profile/${post.author._id}/like`);
+        await apiService.likePost(token, post.author._id);
         notification.success({
           message: 'Success',
           description: 'User liked!',
           placement: 'top',
         });
       } else {
-        await axios.delete(`/api/profile/${post.author._id}/like`);
+        await apiService.unlikePost(token, post.author._id);
         notification.info({
           message: 'Info',
           description: 'User unliked',
@@ -50,7 +52,7 @@ export default function PostCard({ post }) {
     <div className="bg-white rounded-lg shadow p-6 mb-4">
       <div className="flex items-center mb-4">
         <img 
-          src={post.author.photoUrl || 'https://via.placeholder.com/40'} 
+          src={post.author.photoUrl || import.meta.env.VITE_DEFAULT_PROFILE_IMAGE} 
           alt={post.author.name}
           className="w-10 h-10 rounded-full mr-4"
         />
