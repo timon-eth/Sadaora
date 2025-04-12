@@ -119,7 +119,8 @@ cp .env.example .env
 
 5. Update the .env file:
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_BASE_URL=http://localhost:3001/api
+VITE_DEFAULT_PROFILE_IMAGE=https://via.placeholder.com/40
 ```
 
 6. Start the frontend development server:
